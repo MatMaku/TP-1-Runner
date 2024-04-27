@@ -8,6 +8,7 @@ public class Restart : MonoBehaviour
         GetInput();
     }
 
+    //Si se toca la tecla "R" reseteo el tiempo y vuelvo a cargar la escena para que el juego vuelva a empezar
     private void GetInput()
     {
         if (Input.GetKeyDown(KeyCode.R))

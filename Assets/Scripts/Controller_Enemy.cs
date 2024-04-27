@@ -10,12 +10,14 @@ public class Controller_Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
+    //En el update hace que el enemigo vaya hacia la izquierda y luego llama a la corrutina OutOfBounds
     void Update()
     {
         rb.AddForce(new Vector3(-enemyVelocity, 0, 0), ForceMode.Force);
         OutOfBounds();
     }
 
+    //Aca hace que cuando el objeto este fuera de la pantalla se destruya
     public void OutOfBounds()
     {
         if (this.transform.position.x <= -15)

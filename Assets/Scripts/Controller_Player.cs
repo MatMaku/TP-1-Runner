@@ -8,12 +8,14 @@ public class Controller_Player : MonoBehaviour
     private int i = 0;
     private bool floored;
 
+    //Defino el tamaño inicial del jugador
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         initialSize = rb.transform.localScale.y;
     }
 
+    //Espero a recibir un comando
     void Update()
     {
         GetInput();
@@ -25,6 +27,7 @@ public class Controller_Player : MonoBehaviour
         Duck();
     }
 
+    //Si el jugador esta en contacto con el suelo y toco la tecla "W" hago que el jugador salte impulsandolo para arriba segun jumpForce
     private void Jump()
     {
         if (floored)
@@ -36,12 +39,14 @@ public class Controller_Player : MonoBehaviour
         }
     }
 
+    //Dependiendo de si el jugador esta en contacto con el suelo o no al presionar la tecla "S" hago que el jugador se agache o baje mas rapido si esta en el aire
     private void Duck()
     {
         if (floored)
         {
             if (Input.GetKey(KeyCode.S))
             {
+                //Si i(Que es una variable que usamos para saber si el jugador esta agachado o no) es igual a 0 transformo la escala del jugador para que se agache
                 if (i == 0)
                 {
                     rb.transform.localScale = new Vector3(rb.transform.localScale.x, rb.transform.localScale.y / 2, rb.transform.localScale.z);
@@ -50,6 +55,7 @@ public class Controller_Player : MonoBehaviour
             }
             else
             {
+                //Si la escala del jugador es diferente a la inicial y se dejo de presionar "S" devuelvo al jugador a su escala original
                 if (rb.transform.localScale.y != initialSize)
                 {
                     rb.transform.localScale = new Vector3(rb.transform.localScale.x, initialSize, rb.transform.localScale.z);
@@ -59,6 +65,7 @@ public class Controller_Player : MonoBehaviour
         }
         else
         {
+            //Le doy un impulso al jugador hacia abajo para que baje mas rapido
             if (Input.GetKeyDown(KeyCode.S))
             {
                 rb.AddForce(new Vector3(0, -jumpForce, 0), ForceMode.Impulse);
@@ -68,12 +75,14 @@ public class Controller_Player : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
+        //Si entro en colisión con un objeto tageado como "Enemy" destruyo al jugador y declaro gameOver como true para que salta de pantalla de derrota en el script Controller_Hud
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Destroy(this.gameObject);
             Controller_Hud.gameOver = true;
         }
 
+        //Si entro en colisión con un objeto tageado como "Floor" defino la variable floored como true, para saber que el jugador esta en contacto con el suelo
         if (collision.gameObject.CompareTag("Floor"))
         {
             floored = true;
@@ -82,6 +91,7 @@ public class Controller_Player : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
+        //Si salgo de colisión con un objeto tageado como "Floor" defino la variable floored como false, para saber que el jugador dejó de estar en contacto con el suelo
         if (collision.gameObject.CompareTag("Floor"))
         {
             floored = false;
