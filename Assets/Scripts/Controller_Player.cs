@@ -1,16 +1,22 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Controller_Player : MonoBehaviour
 {
+    private MeshRenderer m_Renderer;
     private Rigidbody rb;
     public float jumpForce = 10;
     private float initialSize;
     private int i = 0;
     private bool floored;
+    private bool parry = false;
+    private bool parryCD = true;
+    public int cooldown = 2;
 
     //Defino el tamaño inicial del jugador
     private void Start()
     {
+        m_Renderer = GetComponent<MeshRenderer>();
         rb = GetComponent<Rigidbody>();
         initialSize = rb.transform.localScale.y;
     }
@@ -25,6 +31,7 @@ public class Controller_Player : MonoBehaviour
     {
         Jump();
         Duck();
+        Parry();
     }
 
     //Si el jugador esta en contacto con el suelo y toco la tecla "W" hago que el jugador salte impulsandolo para arriba segun jumpForce
@@ -73,10 +80,43 @@ public class Controller_Player : MonoBehaviour
         }
     }
 
+    //Si el jugador toca el "Space" su personaje se pondra de color amarillo indicando que esta haciendo un parry
+    private void Parry()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && parryCD)
+        {
+            m_Renderer.material.color = Color.yellow;
+            parry = true;
+            parryCD = false;
+            StartCoroutine("ParryCD");
+            
+        }
+    }
+
+    //Se queda un segundo en estado de parry y con la variable cooldown definimos dentro de cuanto tiempo podremos volver a hacer parry
+    IEnumerator ParryCD()
+    {
+        yield return new WaitForSeconds(1);
+        m_Renderer.material.color = Color.blue;
+        parry = false;
+        yield return new WaitForSeconds(cooldown);
+        parryCD = true;
+    }
+
     public void OnCollisionEnter(Collision collision)
     {
         //Si entro en colisión con un objeto tageado como "Enemy" destruyo al jugador y declaro gameOver como true para que salta de pantalla de derrota en el script Controller_Hud
         if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(this.gameObject);
+            Controller_Hud.gameOver = true;
+        }
+
+        if (collision.gameObject.CompareTag("Wall enemy") && parry)
+        {
+            Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Wall enemy") && !parry)
         {
             Destroy(this.gameObject);
             Controller_Hud.gameOver = true;
