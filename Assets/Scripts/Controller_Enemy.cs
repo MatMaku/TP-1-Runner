@@ -17,7 +17,7 @@ public class Controller_Enemy : MonoBehaviour
         OutOfBounds();
     }
 
-    //Aca hace que cuando el objeto este fuera de la pantalla se destruya
+    //Hace que cuando el objeto este fuera de la pantalla se destruya
     public void OutOfBounds()
     {
         if (this.transform.position.x <= -15)
@@ -26,6 +26,7 @@ public class Controller_Enemy : MonoBehaviour
         }
     }
 
+    //Esta corrutina esta en el caso de que el objeto creado sea un power up, ya que usan el mismo script de movimiento, y que entre en contacto con un enemigo
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))

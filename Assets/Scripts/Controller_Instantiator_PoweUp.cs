@@ -26,6 +26,7 @@ public class Controller_Instantiator_PowerUp : MonoBehaviour
     {
         time += Time.deltaTime;
         Controller_Enemy.enemyVelocity = Mathf.SmoothStep(1f, 15f, time / 45f);
+        Controller_Enemy5.enemyVelocity = Mathf.SmoothStep(1f, 15f, time / 45f);
     }
 
     //Voy actualizando respawningTimer hasta que llegue a 0, cuando llegue a 0 creo un nuevo power up y reseteo respawningTimer
