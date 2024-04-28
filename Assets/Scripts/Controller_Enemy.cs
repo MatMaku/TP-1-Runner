@@ -25,4 +25,17 @@ public class Controller_Enemy : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(this.gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("Wall enemy"))
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }

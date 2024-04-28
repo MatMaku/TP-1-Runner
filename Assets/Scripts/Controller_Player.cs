@@ -5,6 +5,8 @@ public class Controller_Player : MonoBehaviour
 {
     private MeshRenderer m_Renderer;
     private Rigidbody rb;
+    public GameObject shield;
+    private bool shieldOn = false;
     public float jumpForce = 10;
     private float initialSize;
     private int i = 0;
@@ -106,26 +108,49 @@ public class Controller_Player : MonoBehaviour
     public void OnCollisionEnter(Collision collision)
     {
         //Si entro en colisión con un objeto tageado como "Enemy" destruyo al jugador y declaro gameOver como true para que salta de pantalla de derrota en el script Controller_Hud
-        if (collision.gameObject.CompareTag("Enemy"))
+        //Tambien revisa si tenemos el power up del escudo puesto, de ser así destruiriamos al enemigo y perderiamos el escudo
+        if (collision.gameObject.CompareTag("Enemy") && !shieldOn)
         {
             Destroy(this.gameObject);
             Controller_Hud.gameOver = true;
         }
+        else if (collision.gameObject.CompareTag("Enemy") && shieldOn)
+        {
+            Destroy(collision.gameObject);
+            shield.SetActive(false);
+            shieldOn = false;
+        }
 
+        //Si entro en colisión con un "Wall enemy" y el parry esta activado este se destruye, sino destruyo al jugador y hago saltar el game over
+        //Tambien revisa si tenemos el power up del escudo puesto, de ser así destruiriamos al enemigo y perderiamos el escudo
         if (collision.gameObject.CompareTag("Wall enemy") && parry)
         {
             Destroy(collision.gameObject);
         }
-        else if (collision.gameObject.CompareTag("Wall enemy") && !parry)
+        else if (collision.gameObject.CompareTag("Wall enemy") && !parry && !shieldOn)
         {
             Destroy(this.gameObject);
             Controller_Hud.gameOver = true;
+        }
+        else if (collision.gameObject.CompareTag("Wall enemy") && !parry && shieldOn)
+        {
+            Destroy(collision.gameObject);
+            shield.SetActive(false);
+            shieldOn = false;
         }
 
         //Si entro en colisión con un objeto tageado como "Floor" defino la variable floored como true, para saber que el jugador esta en contacto con el suelo
         if (collision.gameObject.CompareTag("Floor"))
         {
             floored = true;
+        }
+
+        //Si entra en colisión con un objeto tageado como "PowerUp" activo el power up del escudo
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            Destroy(collision.gameObject);
+            shield.SetActive(true);
+            shieldOn = true;
         }
     }
 

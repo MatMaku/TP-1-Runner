@@ -11,7 +11,7 @@ public class Controller_Instantiator : MonoBehaviour
     public float respawningTimer;
     private float time = 0;
 
-    //En Stard defino la velocidad que van a tener los enemigos en el script Controller_Enemy
+    //En Start defino la velocidad que van a tener los enemigos en el script Controller_Enemy
     void Start()
     {
         Controller_Enemy.enemyVelocity = 2;
